@@ -32,7 +32,7 @@ jobs:
       - name: Build executable
         run: |
           pip install pyinstaller
-          pyinstaller --onefile --icon=misc\tool_icon.ico --uac-admin main.py  # Replace with your main script
+          pyinstaller --onefile --icon=misc\new_icon_v2.ico --uac-admin main.py  # Replace with your main script
 
       # Archive the .exe file for GitHub release
       - name: Archive the .exe

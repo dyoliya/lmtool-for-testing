@@ -75,7 +75,7 @@ class App(ctk.CTk):
         ########################
 
         # Configure window
-        self.title("Lead Management Tools")
+        self.title("LM Tool for Testing")
         self.geometry(center_main_window(self, 1000, 650))
         self.resizable(False, False)
 
@@ -728,7 +728,7 @@ class InitialFrame(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         welcome_label = ctk.CTkLabel(self,
-                                     text="Welcome to\nLead Management\nTools",
+                                     text="Welcome to\nLM Tool for Testing",
                                      font=ctk.CTkFont(
                                          size=36,
                                          weight='bold'))

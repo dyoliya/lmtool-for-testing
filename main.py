@@ -6,12 +6,22 @@ import sys
 from dotenv import load_dotenv
 from interface.display import main as start_ui
 
-load_dotenv(dotenv_path='misc/.env')
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+dotenv_path = resource_path(os.path.join("misc", ".env"))
+
+load_dotenv(dotenv_path)
 
 # Replace these with your repository details
-GITHUB_USER = os.getenv("USER")
-GITHUB_REPO = os.getenv("REPO")
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_USER = os.getenv("GITHUB_USER_NEW")
+GITHUB_REPO = os.getenv("GITHUB_REPO_NEW")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN_NEW")
 GITHUB_API_URL = f'https://api.github.com/repos/{GITHUB_USER}/{GITHUB_REPO}/releases/latest'
 HEADERS = {
     'Authorization': f'token {GITHUB_TOKEN}',
