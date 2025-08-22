@@ -1,7 +1,6 @@
 venv
 __pycache__
 *.cfg
-run_update.py
 run_update.exe
 build
 dist

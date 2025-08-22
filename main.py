@@ -40,10 +40,12 @@ def get_latest_release():
     return None, None
 
 def download_new_version(download_url):
+    """Download new version to a temporary file (main.exe.new)."""
+    new_file = "main.exe.new"
     with requests.get(download_url, stream=True) as r:
-        with open("main.exe", 'wb') as f:
+        with open(new_file, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
-    print("Tool update successful!\nRestarting the tool...")
+    print("Tool update downloaded successfully!")
 
 def check_for_updates():
     local_version = open('version.txt').read().strip()
@@ -52,7 +54,7 @@ def check_for_updates():
     print(f"Lead Management Tools {local_version}")
 
     if latest_version and local_version != latest_version:
-        print(f"New Tool Version available: {latest_version}\nUpdating...")
+        print(f"New Tool Version available: {latest_version}\nDownloading...")
         download_new_version(download_url)
 
         # Update the version.txt file with the latest version
@@ -64,7 +66,12 @@ def check_for_updates():
         return False
 
 def run_updater():
-    subprocess.Popen(["update/run_update.exe", os.path.basename(sys.argv[0])])
+    updater_path = "update/run_update.exe"
+    if not os.path.exists(updater_path):
+        print("Updater not found! Please reinstall the tool.")
+        sys.exit(1)
+
+    subprocess.Popen([updater_path, "main.exe"])
     sys.exit()
 
 def create_directories() -> None:
