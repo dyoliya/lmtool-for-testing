@@ -78,7 +78,7 @@ class App(ctk.CTk):
         with open("version.txt", "r") as f:
             version = f.read().strip()  # 'v1.0.1'
 
-        self.title("LM Tool for Testing {version}")
+        self.title(f"LM Tool for Testing {version}")
         self.geometry(center_main_window(self, 1000, 650))
         self.resizable(False, False)
 
@@ -202,6 +202,14 @@ class App(ctk.CTk):
                                                      hover_color='#424343')
         self.c3_automation_button.grid(row=10, column=0, padx=10, pady=5, sticky='nsew')
         self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(10))
+
+        self.c3_automation_button = ctk.CTkButton(self.tool_options_frame,
+                                                     text='ANOTHER BUTTON FOR TESTING',
+                                                     command=lambda:self.show_frame(NameParsingTool),
+                                                     fg_color='#5b5c5c',
+                                                     hover_color='#424343')
+        self.c3_automation_button.grid(row=10, column=0, padx=11, pady=5, sticky='nsew')
+        self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(11))
 
         self.clicked_button_id = ctk.IntVar()
         self.current_frame = None
