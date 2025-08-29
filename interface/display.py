@@ -17,8 +17,8 @@ from tools.autodialer_cleanup_tool.cleaner_file_automation import dropbox_authen
 from tools.autodialer_cleanup_tool.cleaner_file_automation import main as update_list_cleaner_file
 from tools.well_matching_tool.well_name_matching import main as run_well_matching_tool
 from tools.c3_automation_tool.c3_automation import main as run_c3_tool
-from tools.name_parsing_tool.name_parsing import main as run_name_parsing
-
+from tools.name_parsing_tool.name_parsing_fml import main as run_name_parsing_fml
+from tools.name_parsing_tool.name_parsing_lfm import main as run_name_parsing_lfm
 
 # Outside function that will center a new pop up window relative to the main window
 def center_new_window(main_window: ctk.CTkFrame,
@@ -187,29 +187,21 @@ class App(ctk.CTk):
         self.c3_automation_button.grid(row=8, column=0, padx=10, pady=5, sticky='nsew')
         self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(8))
 
-        self.c3_automation_button = ctk.CTkButton(self.tool_options_frame,
-                                                     text='Name Parsing Tool',
-                                                     command=lambda:self.show_frame(NameParsingTool),
+        self.name_parsing_fml_button = ctk.CTkButton(self.tool_options_frame,
+                                                     text='Name Parsing (FML) Tool',
+                                                     command=lambda:self.show_frame(NameParsingFMLTool),
                                                      fg_color='#5b5c5c',
                                                      hover_color='#424343')
-        self.c3_automation_button.grid(row=9, column=0, padx=10, pady=5, sticky='nsew')
-        self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(9))
+        self.name_parsing_fml_button.grid(row=9, column=0, padx=10, pady=5, sticky='nsew')
+        self.name_parsing_fml_button.bind("<Button-1>", lambda event: self.track_button_click(9))
 
-        self.c3_automation_button = ctk.CTkButton(self.tool_options_frame,
-                                                     text='NEW BUTTON',
-                                                     command=lambda:self.show_frame(NameParsingTool),
+        self.name_parsing_lfm_button = ctk.CTkButton(self.tool_options_frame,
+                                                     text='Name Parsing (LFM) Tool',
+                                                     command=lambda:self.show_frame(NameParsingLFMTool),
                                                      fg_color='#5b5c5c',
                                                      hover_color='#424343')
-        self.c3_automation_button.grid(row=10, column=0, padx=10, pady=5, sticky='nsew')
-        self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(10))
-
-        self.c3_automation_button = ctk.CTkButton(self.tool_options_frame,
-                                                     text='ANOTHER BUTTON FOR TESTING',
-                                                     command=lambda:self.show_frame(NameParsingTool),
-                                                     fg_color='#5b5c5c',
-                                                     hover_color='#424343')
-        self.c3_automation_button.grid(row=10, column=0, padx=11, pady=5, sticky='nsew')
-        self.c3_automation_button.bind("<Button-1>", lambda event: self.track_button_click(11))
+        self.name_parsing_lfm_button.grid(row=10, column=0, padx=10, pady=5, sticky='nsew')
+        self.name_parsing_lfm_button.bind("<Button-1>", lambda event: self.track_button_click(10))
 
         self.clicked_button_id = ctk.IntVar()
         self.current_frame = None
@@ -314,8 +306,12 @@ class App(ctk.CTk):
                 "C3 Automation Tool List"
                ],
 
-            8: [
-                "Name Parsing Tool List"
+            9: [
+                "Name Parsing (FML) Tool List"
+               ],
+
+            10: [
+                "Name Parsing (LFM) Tool List"
                ]
         }
         checkbox_labels = output_checklist_dict[self.clicked_button_id.get()]
@@ -1519,7 +1515,7 @@ class C3AutomationTool(ctk.CTkFrame):
                                                                                         self.save_path))
             run_tool_button.grid(row=7, column=0, padx=10, pady=5)
 
-class NameParsingTool(ctk.CTkFrame):
+class NameParsingFMLTool(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
 
@@ -1534,26 +1530,36 @@ class NameParsingTool(ctk.CTkFrame):
         self.grid_rowconfigure(5, weight=1)
 
         label = ctk.CTkLabel(self,
-                             text="Name Parsing Tool",
+                             text="Name Parsing (FML) Tool",
                              font=ctk.CTkFont(
                                  size=30,
                                  weight='bold'
                              ))
         label.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
+        label = ctk.CTkLabel(self,
+                             text="Parse: First Middle Last",
+                             font=ctk.CTkFont(
+                                 size=20,
+                                 weight='bold'
+                             ))
+        label.grid(row=1, column=0, padx=10, pady=(0,0), sticky='nsew')
+
+        self.grid_rowconfigure(2, minsize=10)
+
         list_button = ctk.CTkButton(self,
                                     text="Select files to process",
                                     fg_color='#5b5c5c',
                                     hover_color='#424343',
                                     command=lambda:self.select_files_to_clean(self))
-        list_button.grid(row=1, column=0, padx=5, pady=5, sticky="ns")
+        list_button.grid(row=3, column=0, padx=5, pady=5, sticky="ns")
 
         list_button = ctk.CTkButton(self,
                                     text="Save output files to",
                                     fg_color='#5b5c5c',
                                     hover_color='#424343',
                                     command=lambda:self.select_save_path(self))
-        list_button.grid(row=3, column=0, padx=5, pady=5, sticky="ns")
+        list_button.grid(row=4, column=0, padx=5, pady=5, sticky="ns")
     
     def select_files_to_clean(self, window):
 
@@ -1594,7 +1600,97 @@ class NameParsingTool(ctk.CTkFrame):
                                             text_color='#141414',
                                             corner_radius=50,
                                             font=ctk.CTkFont(size=18, weight='bold'),
-                                            command=lambda:self.controller.trigger_tool(run_name_parsing,
+                                            command=lambda:self.controller.trigger_tool(run_name_parsing_fml,
+                                                                                        self.files_to_clean,
+                                                                                        self.save_path))
+            run_tool_button.grid(row=5, column=0, padx=10, pady=5)
+
+class NameParsingLFMTool(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+
+        self.controller = controller
+        self.controller.input_file_check = False
+        self.controller.save_path_check = False
+        self.db_file = False
+        self.files_to_clean = False
+        self.save_path = False
+        self.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(5, weight=1)
+
+        label = ctk.CTkLabel(self,
+                             text="Name Parsing (LFM) Tool",
+                             font=ctk.CTkFont(
+                                 size=30,
+                                 weight='bold'
+                             ))
+        label.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+
+        label = ctk.CTkLabel(self,
+                             text="Parse: Last First Middle",
+                             font=ctk.CTkFont(
+                                 size=20,
+                                 weight='bold'
+                             ))
+        label.grid(row=1, column=0, padx=10, pady=(0,0), sticky='nsew')
+
+        self.grid_rowconfigure(2, minsize=10)
+
+        list_button = ctk.CTkButton(self,
+                                    text="Select files to process",
+                                    fg_color='#5b5c5c',
+                                    hover_color='#424343',
+                                    command=lambda:self.select_files_to_clean(self))
+        list_button.grid(row=3, column=0, padx=5, pady=5, sticky="ns")
+
+        list_button = ctk.CTkButton(self,
+                                    text="Save output files to",
+                                    fg_color='#5b5c5c',
+                                    hover_color='#424343',
+                                    command=lambda:self.select_save_path(self))
+        list_button.grid(row=4, column=0, padx=5, pady=5, sticky="ns")
+    
+    def select_files_to_clean(self, window):
+
+        self.files_to_clean = filedialog.askopenfilenames(title="Select files to process",
+                                                          filetypes=[("All Files", "*.*")])
+        if self.files_to_clean:
+            files_to_clean_frame = ctk.CTkScrollableFrame(window,
+                                                          height=80)
+            files_to_clean_frame.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
+            files_to_clean_frame.grid_columnconfigure(0, weight=1)
+
+            for i, file in enumerate(self.files_to_clean):
+                file_name = os.path.basename(file)
+                selected_files_label = ctk.CTkLabel(files_to_clean_frame,
+                                                    text=file_name,
+                                                    wraplength=400)
+                selected_files_label.grid(row=i, column=0, padx=10, pady=3, sticky='nsew')       
+            self.check_run()         
+    
+    def select_save_path(self, window):
+        self.save_path = filedialog.askdirectory(title="Save directory")
+        if self.save_path:
+            save_path_label = ctk.CTkLabel(window,
+                                           text=f"{self.save_path}",
+                                           fg_color="transparent",
+                                           wraplength=400)
+            save_path_label.grid(row=4, column=0, padx=5, pady=5)
+            self.check_run()
+
+    def check_run(self):
+        if self.files_to_clean and self.save_path:
+            run_tool_button = ctk.CTkButton(self,
+                                            text='RUN TOOL',
+                                            height=36,
+                                            width=240,
+                                            fg_color='#d99125',
+                                            hover_color='#ae741e',
+                                            text_color='#141414',
+                                            corner_radius=50,
+                                            font=ctk.CTkFont(size=18, weight='bold'),
+                                            command=lambda:self.controller.trigger_tool(run_name_parsing_lfm,
                                                                                         self.files_to_clean,
                                                                                         self.save_path))
             run_tool_button.grid(row=5, column=0, padx=10, pady=5)
